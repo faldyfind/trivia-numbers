@@ -1,0 +1,36 @@
+on:
+  push:
+#     branches:
+#       - master
+#   pull_request:
+#       types: [opened, synchronize, reopened]
+
+name: Main Workflow
+jobs:
+  build:
+    name: Compile and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.13'
+      - name: Get dependencies
+        run: go get -v -d ./...
+      # Create directory bin to hold the unit test report
+      - name: Create bin directory
+        run: mkdir bin
+      # Compile the binary
+      - name: Build the binary
+        run : go build -o numbers-be/bin/main numbers-be/main.go
+      # 'Go test' automates testing the packages named by the import paths.
+      - name: Run unit test
+        run: go test ./... -coverprofile=bin/cov.out -json >> bin/report.json
+      # Create artifact for the coverage results
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage-report
+          path: bin
