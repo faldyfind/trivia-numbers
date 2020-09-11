@@ -31,27 +31,3 @@ func NumbersHandler(ctx echo.Context) error {
 	body, _ := ioutil.ReadAll(resp.Body)
 	return ctx.JSON(http.StatusOK, string(body))
 }
-
-// HoroscopeHandler function
-func HoroscopeHandler(ctx echo.Context) error {
-	star := ctx.Param("star")
-
-	url := "http://horoscope-api.herokuapp.com/horoscope/today/" + star
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return fmt.Errorf("failed to create request: %v", err)
-	}
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return fmt.Errorf("failed to do request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= http.StatusBadRequest {
-		return fmt.Errorf("invalid string parameter: %s", star)
-	}
-
-	body, _ := ioutil.ReadAll(resp.Body)
-	return ctx.JSON(http.StatusOK, string(body))
-}
