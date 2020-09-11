@@ -1,9 +1,9 @@
 on:
   push:
-#     branches:
-#       - master
-#   pull_request:
-#       types: [opened, synchronize, reopened]
+    branches:
+      - master
+  pull_request:
+      types: [opened, synchronize, reopened]
 
 name: Main Workflow
 jobs:
